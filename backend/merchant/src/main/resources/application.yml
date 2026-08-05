@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: merchant
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/merchant?createDatabaseIfNotExist=true
+    username: ${SCHEMA_USERNAME}
+    password: ${SCHEMA_PASSWORD}
+  jpa:
+    show-sql: true
+
