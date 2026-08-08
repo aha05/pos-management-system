@@ -1,6 +1,5 @@
-package com.pos.merchant.repository;
+package com.pos.merchant.merchant;
 
-import com.pos.merchant.entity.Merchant;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MerchantRepository extends JpaRepository<Merchant, Long> {

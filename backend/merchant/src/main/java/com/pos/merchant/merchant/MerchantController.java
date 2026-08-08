@@ -1,12 +1,8 @@
-package com.pos.merchant.controller;
+package com.pos.merchant.merchant;
 
-import com.pos.merchant.dto.MerchantRequest;
-import com.pos.merchant.dto.MerchantResponse;
-import com.pos.merchant.entity.Merchant;
-import com.pos.merchant.service.MerchantService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +21,7 @@ public class MerchantController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public MerchantResponse getMerchants(@RequestBody MerchantRequest request) {
+    public MerchantResponse addMerchant(@Valid @RequestBody MerchantRequest request) {
         return merchantService.addMerchant(request);
     }
 }

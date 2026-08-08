@@ -7,4 +7,3 @@ spring:
     password: ${SCHEMA_PASSWORD}
   jpa:
     show-sql: true
-
