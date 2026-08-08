@@ -19,9 +19,8 @@ public class GlobalExceptionHandler {
     ){
         var errors = new HashMap<String, String>();
 
-        exception.getBindingResult().getFieldErrors().forEach( error ->{
-                    errors.put(error.getField(), error.getDefaultMessage());
-                }
+        exception.getBindingResult().getFieldErrors().forEach( error ->
+                errors.put(error.getField(), error.getDefaultMessage())
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
     }

@@ -1,7 +1,5 @@
 package com.pos.merchant.merchant;
 
-import com.pos.merchant.category.MerchantCategory;
-import com.pos.merchant.fee_profile.FeeProfile;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -24,10 +22,10 @@ public class MerchantRequest {
     private String businessLicense;
 
     @NotNull(message = "Merchant Category is mandatory")
-    private MerchantCategory merchantCategory;
+    private Long merchantCategoryId;
 
     @NotNull(message = "Fee Profile is mandatory")
-    private FeeProfile feeProfile;
+    private Long feeProfileId;
 
     @NotNull(message = "Status is mandatory")
     private Long status;

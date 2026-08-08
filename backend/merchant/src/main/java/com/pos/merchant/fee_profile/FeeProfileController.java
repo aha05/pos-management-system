@@ -1,8 +1,5 @@
 package com.pos.merchant.fee_profile;
 
-import com.pos.merchant.category.MerchantCategoryRequest;
-import com.pos.merchant.category.MerchantCategoryResponse;
-import com.pos.merchant.category.MerchantCategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

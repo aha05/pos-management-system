@@ -1,6 +1,5 @@
 package com.pos.merchant.fee_profile;
 
-import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
