@@ -8,7 +8,7 @@ public class MerchantCategoryMapperImpl implements MerchantCategoryMapper {
     public MerchantCategoryResponse toDto(MerchantCategory merchantCategory) {
         return MerchantCategoryResponse.builder()
                 .id(merchantCategory.getId())
-                .categoryCode(merchantCategory.getCategoryName())
+                .categoryCode(merchantCategory.getCategoryCode())
                 .categoryName(merchantCategory.getCategoryName())
                 .description(merchantCategory.getDescription())
                 .active(merchantCategory.getActive())
