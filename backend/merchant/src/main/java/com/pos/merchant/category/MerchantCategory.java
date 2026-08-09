@@ -14,7 +14,7 @@ public class MerchantCategory extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name="category_code")
+    @Column(name="category_code", unique = true)
     private String  categoryCode;
 
     @Column(name="category_name")

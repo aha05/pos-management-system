@@ -16,7 +16,7 @@ public class FeeProfile extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "profile_code")
+    @Column(name = "profile_code", unique = true)
     private String profileCode;
 
     @Column(name = "profile_name")
