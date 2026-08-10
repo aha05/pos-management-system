@@ -6,5 +6,5 @@ public enum InventoryStatus {
     IN_REPAIR,
     LOST,
     DAMAGED,
-    RETIRED;
+    RETIRED
 }

@@ -1,7 +1,5 @@
 package com.pos.terminal.common;
 
-import com.pos.merchant.common.ErrorResponse;
-import com.pos.merchant.common.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

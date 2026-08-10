@@ -6,5 +6,5 @@ public enum TerminalStatus {
     INACTIVE,
     SUSPENDED,
     BLOCKED,
-    DECOMMISSIONED;
+    DECOMMISSIONED
 }
