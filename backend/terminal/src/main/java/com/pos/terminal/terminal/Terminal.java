@@ -1,0 +1,68 @@
+package com.pos.terminal.terminal;
+
+import com.pos.terminal.audit.BaseEntity;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+
+@Getter
+@Setter
+@Entity
+@Table(name = "terminal")
+public class Terminal extends BaseEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "terminal_code")
+    private String terminalCode;
+
+    @Column(name = "serial_number")
+    private String serialNumber;
+
+    @Column(name = "device_model")
+    private String deviceModel;
+
+    @Column(name = "manufacturer")
+    private String  manufacturer;
+
+    @Column(name = "terminal_type")
+    private String terminalType;
+
+    @Column(name = "imei")
+    private String imei;
+
+    @Column(name = "sim_number")
+    private String simNumber;
+
+    @Column(name = "sim_iccid")
+    private String simIccid;
+
+    @Column(name = "mac_address")
+    private String macAddress;
+
+    @Column(name = "current_firmware_id")
+    private BigInteger currentFirmwareTd;
+
+    @Column(name = "status")
+    private String status;
+
+    @Column(name = "inventory_status")
+    private String inventoryStatus;
+
+
+    @Column(name = "registered_at")
+    private String registeredAt;
+
+    @Column(name = "activated_at")
+    private LocalDateTime activatedAt;
+
+    @Column(name = "activated_at")
+    private LocalDateTime deactivatedAt;
+
+    @Column(name = "activated_at")
+    private LocalDateTime  lastSeenAt;
+}

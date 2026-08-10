@@ -42,8 +42,9 @@ public class Merchant extends BaseEntity {
     @JoinColumn(name = "fee_profile_id")
     private FeeProfile feeProfile;
 
+    @Convert(converter = MerchantStatusConverter.class)
     @Column(name = "status")
-    private Long status;
+    private MerchantStatus status;
 
     @Column(name = "phone_number")
     private String phoneNumber;
