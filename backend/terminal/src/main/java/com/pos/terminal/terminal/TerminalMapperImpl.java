@@ -1,0 +1,50 @@
+package com.pos.terminal.terminal;
+
+import org.springframework.stereotype.Component;
+
+@Component
+public class TerminalMapperImpl implements TerminalMapper {
+    @Override
+    public TerminalResponse toDto(Terminal terminal) {
+        return TerminalResponse.builder()
+                .id(terminal.getId())
+                .terminalCode(terminal.getTerminalCode())
+                .serialNumber(terminal.getSerialNumber())
+                .deviceModel(terminal.getDeviceModel())
+                .manufacturer(terminal.getManufacturer())
+                .terminalType(terminal.getTerminalType())
+                .imei(terminal.getImei())
+                .simNumber(terminal.getSimNumber())
+                .simIccid(terminal.getSimIccid())
+                .macAddress(terminal.getMacAddress())
+                .currentFirmwareId(terminal.getCurrentFirmwareId())
+                .status(terminal.getStatus())
+                .inventoryStatus(terminal.getInventoryStatus())
+                .registeredAt(terminal.getRegisteredAt())
+                .activatedAt(terminal.getActivatedAt())
+                .deactivatedAt(terminal.getDeactivatedAt())
+                .lastSeenAt(terminal.getLastSeenAt())
+                .build();
+    }
+
+    @Override
+    public Terminal toEntity(TerminalRequest request) {
+        Terminal terminal = new Terminal();
+        terminal.setTerminalCode(request.getTerminalCode());
+        terminal.setSerialNumber(request.getSerialNumber());
+        terminal.setDeviceModel(request.getDeviceModel());
+        terminal.setManufacturer(request.getManufacturer());
+        terminal.setTerminalType(request.getTerminalType());
+        terminal.setImei(request.getImei());
+        terminal.setSimNumber(request.getSimNumber());
+        terminal.setMacAddress(request.getMacAddress());
+        terminal.setCurrentFirmwareId(request.getCurrentFirmwareId());
+        terminal.setStatus(request.getStatus());
+        terminal.setInventoryStatus(request.getInventoryStatus());
+        terminal.setRegisteredAt(request.getRegisteredAt());
+        terminal.setActivatedAt(request.getActivatedAt());
+        terminal.setDeactivatedAt(request.getDeactivatedAt());
+        terminal.setLastSeenAt(request.getLastSeenAt());
+        return terminal;
+    }
+}

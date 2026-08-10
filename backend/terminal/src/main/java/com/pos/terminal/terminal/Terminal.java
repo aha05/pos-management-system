@@ -45,7 +45,7 @@ public class Terminal extends BaseEntity {
     private String macAddress;
 
     @Column(name = "current_firmware_id")
-    private BigInteger currentFirmwareTd;
+    private BigInteger currentFirmwareId;
 
     @Column(name = "status")
     private String status;
@@ -60,9 +60,9 @@ public class Terminal extends BaseEntity {
     @Column(name = "activated_at")
     private LocalDateTime activatedAt;
 
-    @Column(name = "activated_at")
+    @Column(name = "deactivated_at")
     private LocalDateTime deactivatedAt;
 
-    @Column(name = "activated_at")
+    @Column(name = "last_seen_at")
     private LocalDateTime  lastSeenAt;
 }

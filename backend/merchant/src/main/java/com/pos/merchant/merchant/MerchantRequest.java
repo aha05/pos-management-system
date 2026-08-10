@@ -28,7 +28,7 @@ public class MerchantRequest {
     private Long feeProfileId;
 
     @NotNull(message = "Status is mandatory")
-    private Long status;
+    private MerchantStatus status;
 
     @NotBlank(message = "Phone Number is mandatory")
     private String phoneNumber;

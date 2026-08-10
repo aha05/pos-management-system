@@ -3,11 +3,16 @@ package com.pos.terminal.health;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.terminal.terminal.Terminal;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @Entity
 @Table(name="terminal_heartbeat")
 public class TerminalHeartbeat {

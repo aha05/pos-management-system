@@ -16,7 +16,7 @@ public class MerchantResponse {
     private String businessLicense;
     private MerchantCategory merchantCategory;
     private FeeProfile feeProfile;
-    private Long status;
+    private MerchantStatus status;
     private String phoneNumber;
     private String email;
     private String website;
