@@ -18,7 +18,7 @@ CREATE TABLE terminal
     deactivated_at TIMESTAMP NULL,
     last_seen_at TIMESTAMP NULL,
 
-    version BIGINT NOT NULL,
+    version BIGINT NOT NULL DEFAULT 0,
 
     created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     created_by   VARCHAR(100),

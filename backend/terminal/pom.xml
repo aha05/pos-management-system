@@ -81,7 +81,7 @@
 				<groupId>org.flywaydb</groupId>
 				<artifactId>flyway-maven-plugin</artifactId>
 				<configuration>
-					<url>jdbc:mysql://${env.DB_HOST}:${env.DB_PORT}/merchant?createDatabaseIfNotExist=true</url>
+					<url>jdbc:mysql://${env.DB_HOST}:${env.DB_PORT}/terminal?createDatabaseIfNotExist=true</url>
 					<user>root</user>
 					<password>root</password>
 					<cleanDisabled>false</cleanDisabled> <!-- make the cleanDisabled: false otherwise flyway:clean won’t work this should be removed at production for safety purpose-->

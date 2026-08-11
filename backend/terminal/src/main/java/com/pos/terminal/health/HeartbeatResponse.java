@@ -1,6 +1,5 @@
 package com.pos.terminal.health;
 
-import com.pos.terminal.terminal.Terminal;
 import lombok.Builder;
 import lombok.Data;
 
@@ -12,7 +11,7 @@ import java.time.LocalDateTime;
 @Data
 public class HeartbeatResponse {
     private Long id;
-    private Terminal terminal;
+    private Long terminalId;
     private LocalDateTime heartbeatTime;
     private Integer batteryLevel;
     private BigInteger freeStorage;
