@@ -2,9 +2,9 @@ server:
   port: 8081
 spring:
   application:
-    name: merchant
+    name: terminal
   datasource:
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/merchant?createDatabaseIfNotExist=true
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/terminal?createDatabaseIfNotExist=true
     username: ${SCHEMA_USERNAME}
     password: ${SCHEMA_PASSWORD}
   jpa:

@@ -38,7 +38,7 @@ public class TerminalRequest {
     private String macAddress;
 
     @NotNull(message = "Current Firmware Id Type is mandatory")
-    private BigInteger currentFirmwareId;
+    private Long currentFirmwareId;
 
     @NotBlank(message = "Status Type is mandatory")
     private String status;

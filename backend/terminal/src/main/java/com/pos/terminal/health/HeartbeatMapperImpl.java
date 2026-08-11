@@ -1,11 +1,20 @@
 package com.pos.terminal.health;
 
+import com.pos.terminal.terminal.Terminal;
+import com.pos.terminal.terminal.TerminalRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+@Component
+@RequiredArgsConstructor
 public class HeartbeatMapperImpl implements HeartbeatMapper {
+    private final TerminalRepository terminalRepository;
+
     @Override
     public HeartbeatResponse toDto(TerminalHeartbeat terminalHeartbeat) {
         return HeartbeatResponse.builder()
                 .id(terminalHeartbeat.getId())
-                .terminal(terminalHeartbeat.getTerminal())
+                .terminalId(terminalHeartbeat.getTerminal().getId())
                 .heartbeatTime(terminalHeartbeat.getHeartbeatTime())
                 .batteryLevel(terminalHeartbeat.getBatteryLevel())
                 .freeStorage(terminalHeartbeat.getFreeStorage())
@@ -22,7 +31,7 @@ public class HeartbeatMapperImpl implements HeartbeatMapper {
     @Override
     public TerminalHeartbeat toEntity(HeartbeatRequest request) {
         TerminalHeartbeat terminalHeartbeat = new TerminalHeartbeat();
-        terminalHeartbeat.setTerminal(request.getTerminal());
+        terminalHeartbeat.setTerminal(getTerminalById(request.getTerminalId()));
         terminalHeartbeat.setHeartbeatTime(request.getHeartbeatTime());
         terminalHeartbeat.setBatteryLevel(request.getBatteryLevel());
         terminalHeartbeat.setFreeStorage(request.getFreeStorage());
@@ -37,7 +46,7 @@ public class HeartbeatMapperImpl implements HeartbeatMapper {
         return terminalHeartbeat;
     }
 
-    public Merchant getMerchantById(Long merchantId){
-        return merchantRepository.findById(merchantId).orElse(null);
+    public Terminal getTerminalById(Long terminalId){
+        return terminalRepository.findById(terminalId).orElse(null);
     }
 }

@@ -19,7 +19,7 @@ public class TerminalResponse {
     private String simNumber;
     private String simIccid;
     private String macAddress;
-    private BigInteger currentFirmwareId;
+    private Long currentFirmwareId;
     private String status;
     private String inventoryStatus;
     private String registeredAt;

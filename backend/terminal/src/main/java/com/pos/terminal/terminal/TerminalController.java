@@ -19,7 +19,7 @@ public class TerminalController {
         return terminalService.getTerminals();
     }
 
-    @PostMapping("/heartbeat")
+    @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public TerminalResponse addTerminal(@Valid @RequestBody TerminalRequest request) {
         return terminalService.addTerminal(request);

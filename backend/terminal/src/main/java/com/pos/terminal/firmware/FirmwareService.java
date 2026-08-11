@@ -20,7 +20,7 @@ public class FirmwareService {
     }
 
     public FirmwareResponse addFirmware(FirmwareRequest request) {
-        TerminalFirmware terminalFirmware = new TerminalFirmware();
+        TerminalFirmware terminalFirmware = firmwareMapper.toEntity(request);
         firmwareRepository.save(terminalFirmware);
         return firmwareMapper.toDto(terminalFirmware);
     }

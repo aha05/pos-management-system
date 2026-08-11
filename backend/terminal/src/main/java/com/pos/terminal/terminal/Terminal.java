@@ -1,11 +1,12 @@
 package com.pos.terminal.terminal;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.terminal.audit.BaseEntity;
+import com.pos.terminal.firmware.TerminalFirmware;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Getter
@@ -43,9 +44,10 @@ public class Terminal extends BaseEntity {
 
     @Column(name = "mac_address")
     private String macAddress;
-
-    @Column(name = "current_firmware_id")
-    private BigInteger currentFirmwareId;
+    @ManyToOne
+    @JsonIgnore
+    @JoinColumn(name = "current_firmware_id")
+    private TerminalFirmware currentFirmware;
 
     @Column(name = "status")
     private String status;
