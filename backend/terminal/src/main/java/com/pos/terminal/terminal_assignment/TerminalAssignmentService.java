@@ -1,6 +1,5 @@
 package com.pos.terminal.terminal_assignment;
 
-import com.pos.terminal.terminal.TerminalMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

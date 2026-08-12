@@ -2,7 +2,6 @@ package com.pos.terminal.firmware;
 
 import com.pos.terminal.common.ResourceAlreadyExistException;
 import com.pos.terminal.common.ResourceNotFoundException;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

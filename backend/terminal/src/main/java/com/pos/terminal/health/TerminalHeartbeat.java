@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.terminal.terminal.Terminal;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.tool.schema.internal.exec.GenerationTargetToDatabase;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;

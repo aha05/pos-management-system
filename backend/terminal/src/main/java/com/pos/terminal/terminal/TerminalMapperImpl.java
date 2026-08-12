@@ -1,9 +1,6 @@
 package com.pos.terminal.terminal;
 
-import com.pos.terminal.common.ResourceNotFoundException;
-import com.pos.terminal.firmware.FirmwareRepository;
 import com.pos.terminal.firmware.FirmwareService;
-import com.pos.terminal.firmware.TerminalFirmware;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
