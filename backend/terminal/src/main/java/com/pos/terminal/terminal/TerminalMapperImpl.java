@@ -2,6 +2,7 @@ package com.pos.terminal.terminal;
 
 import com.pos.terminal.common.ResourceNotFoundException;
 import com.pos.terminal.firmware.FirmwareRepository;
+import com.pos.terminal.firmware.FirmwareService;
 import com.pos.terminal.firmware.TerminalFirmware;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class TerminalMapperImpl implements TerminalMapper {
-    private final FirmwareRepository firmwareRepository;
+    private final FirmwareService firmwareService;
 
     @Override
     public TerminalResponse toDto(Terminal terminal) {
@@ -46,7 +47,9 @@ public class TerminalMapperImpl implements TerminalMapper {
         terminal.setSimNumber(request.getSimNumber());
         terminal.setSimIccid(request.getSimIccid());
         terminal.setMacAddress(request.getMacAddress());
-        terminal.setCurrentFirmware(findFirmwareById(request.getCurrentFirmwareId()));
+        terminal.setCurrentFirmware(firmwareService
+                .findFirmwareById(
+                        request.getCurrentFirmwareId()));
         terminal.setStatus(request.getStatus());
         terminal.setInventoryStatus(request.getInventoryStatus());
         terminal.setRegisteredAt(request.getRegisteredAt());
@@ -54,11 +57,5 @@ public class TerminalMapperImpl implements TerminalMapper {
         terminal.setDeactivatedAt(request.getDeactivatedAt());
         terminal.setLastSeenAt(request.getLastSeenAt());
         return terminal;
-    }
-
-    private TerminalFirmware findFirmwareById(Long firmwareId){
-       return firmwareRepository.findById(firmwareId).orElseThrow(
-                () -> new ResourceNotFoundException("Firmware", "firmwareId", firmwareId)
-        );
     }
 }

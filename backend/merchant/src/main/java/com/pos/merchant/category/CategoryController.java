@@ -10,18 +10,18 @@ import java.util.List;
 @RestController
 @RequestMapping("merchant-category")
 @RequiredArgsConstructor
-public class MerchantCategoryController {
-    private final MerchantCategoryService categoryService;
+public class CategoryController {
+    private final CategoryService categoryService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MerchantCategoryResponse> getCategories() {
+    public List<CategoryResponse> getCategories() {
         return categoryService.getCategories();
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public MerchantCategoryResponse addCategory(@Valid @RequestBody MerchantCategoryRequest request) {
+    public CategoryResponse addCategory(@Valid @RequestBody CategoryRequest request) {
         return categoryService.addCategory(request);
     }
 }

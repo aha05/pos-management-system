@@ -1,14 +1,13 @@
 package com.pos.merchant.merchant_document;
 
-import com.pos.merchant.merchant.Merchant;
-import com.pos.merchant.merchant.MerchantRepository;
+import com.pos.merchant.merchant.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class MerchantDocumentMapperImpl implements MerchantDocumentMapper {
-    private final MerchantRepository merchantRepository;
+    private final MerchantService merchantService;
 
     @Override
     public MerchantDocumentResponse toDto(MerchantDocument merchantDocument) {
@@ -26,15 +25,12 @@ public class MerchantDocumentMapperImpl implements MerchantDocumentMapper {
     @Override
     public MerchantDocument toEntity(MerchantDocumentRequest request) {
         MerchantDocument merchantDocument = new MerchantDocument();
-        merchantDocument.setMerchant(getMerchantById(request.getMerchantId()));
+        merchantDocument.setMerchant(merchantService
+                .findMerchantById(request.getMerchantId()));
         merchantDocument.setDocumentType(request.getDocumentType());
         merchantDocument.setFileName(request.getFileName());
         merchantDocument.setStoragePath(request.getStoragePath());
         merchantDocument.setVerified(request.getVerified());
         return merchantDocument;
-    }
-
-    public Merchant getMerchantById(Long merchantId){
-        return merchantRepository.findById(merchantId).orElse(null);
     }
 }

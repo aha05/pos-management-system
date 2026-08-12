@@ -3,10 +3,10 @@ package com.pos.merchant.category;
 import org.springframework.stereotype.Component;
 
 @Component
-public class MerchantCategoryMapperImpl implements MerchantCategoryMapper {
+public class CategoryMapperImpl implements CategoryMapper {
     @Override
-    public MerchantCategoryResponse toDto(MerchantCategory merchantCategory) {
-        return MerchantCategoryResponse.builder()
+    public CategoryResponse toDto(MerchantCategory merchantCategory) {
+        return CategoryResponse.builder()
                 .id(merchantCategory.getId())
                 .categoryCode(merchantCategory.getCategoryCode())
                 .categoryName(merchantCategory.getCategoryName())
@@ -16,7 +16,7 @@ public class MerchantCategoryMapperImpl implements MerchantCategoryMapper {
     }
 
     @Override
-    public MerchantCategory toEntity(MerchantCategoryRequest request) {
+    public MerchantCategory toEntity(CategoryRequest request) {
         MerchantCategory merchantCategory = new MerchantCategory();
         merchantCategory.setCategoryCode(request.getCategoryCode());
         merchantCategory.setCategoryName(request.getCategoryName());

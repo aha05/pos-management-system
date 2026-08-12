@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class MerchantCategoryRequest {
+public class CategoryRequest {
    @NotBlank(message = "Category Code is mandatory")
    private String categoryCode;
 

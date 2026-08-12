@@ -1,14 +1,13 @@
 package com.pos.merchant.branch;
 
-import com.pos.merchant.merchant.Merchant;
-import com.pos.merchant.merchant.MerchantRepository;
+import com.pos.merchant.merchant.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class MerchantBranchMapperImpl implements MerchantBranchMapper {
-    private final MerchantRepository merchantRepository;
+    private final MerchantService merchantService;
 
     @Override
     public MerchantBranchResponse toDto(MerchantBranch merchantBranch) {
@@ -32,7 +31,8 @@ public class MerchantBranchMapperImpl implements MerchantBranchMapper {
     @Override
     public MerchantBranch toEntity(MerchantBranchRequest request) {
         MerchantBranch merchantBranch = new MerchantBranch();
-        merchantBranch.setMerchant(getMerchantById(request.getMerchantId()));
+        merchantBranch.setMerchant(merchantService
+                .findMerchantById(request.getMerchantId()));
         merchantBranch.setBranchCode(request.getBranchCode());
         merchantBranch.setBranchName(request.getBranchName());
         merchantBranch.setPhoneNumber(request.getPhoneNumber());
@@ -44,9 +44,5 @@ public class MerchantBranchMapperImpl implements MerchantBranchMapper {
         merchantBranch.setAddress(request.getAddress());
         merchantBranch.setStatus(request.getStatus());
         return merchantBranch;
-    }
-
-    public Merchant getMerchantById(Long merchantId){
-        return merchantRepository.findById(merchantId).orElse(null);
     }
 }

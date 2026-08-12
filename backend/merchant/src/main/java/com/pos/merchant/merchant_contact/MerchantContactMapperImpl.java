@@ -1,14 +1,13 @@
 package com.pos.merchant.merchant_contact;
 
-import com.pos.merchant.merchant.Merchant;
-import com.pos.merchant.merchant.MerchantRepository;
+import com.pos.merchant.merchant.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class MerchantContactMapperImpl implements MerchantContactMapper {
-    private final MerchantRepository merchantRepository;
+    private final MerchantService merchantService;
 
     @Override
     public MerchantContactResponse toDto(MerchantContact merchantContact) {
@@ -26,16 +25,12 @@ public class MerchantContactMapperImpl implements MerchantContactMapper {
     @Override
     public MerchantContact toEntity(MerchantContactRequest request) {
         MerchantContact merchantContact = new MerchantContact();
-        merchantContact.setMerchant(
-                getMerchantById(request.getMerchantId()));
+        merchantContact.setMerchant(merchantService
+                .findMerchantById(request.getMerchantId()));
         merchantContact.setDesignation(request.getDesignation());
         merchantContact.setPhoneNumber(merchantContact.getPhoneNumber());
         merchantContact.setEmail(merchantContact.getEmail());
         merchantContact.setPrimaryContact(merchantContact.getPrimaryContact());
         return merchantContact;
-    }
-
-    public Merchant getMerchantById(Long merchantId){
-        return merchantRepository.findById(merchantId).orElse(null);
     }
 }

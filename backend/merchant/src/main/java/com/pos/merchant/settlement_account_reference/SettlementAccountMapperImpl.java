@@ -1,14 +1,13 @@
 package com.pos.merchant.settlement_account_reference;
 
-import com.pos.merchant.merchant.Merchant;
-import com.pos.merchant.merchant.MerchantRepository;
+import com.pos.merchant.merchant.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class SettlementAccountMapperImpl implements SettlementAccountMapper {
-    private final MerchantRepository merchantRepository;
+    private final MerchantService merchantService;
 
     @Override
     public SettlementAccountResponse toDto(SettlementAccountReference settlementAccountReference) {
@@ -29,7 +28,7 @@ public class SettlementAccountMapperImpl implements SettlementAccountMapper {
     @Override
     public SettlementAccountReference toEntity(SettlementAccountRequest request) {
         var settlementAccountReference = new SettlementAccountReference();
-        settlementAccountReference.setMerchant(getMerchantById(request.getMerchantId()));
+        settlementAccountReference.setMerchant(merchantService.findMerchantById(request.getMerchantId()));
         settlementAccountReference.setAccountNumber(request.getAccountNumber());
         settlementAccountReference.setAccountHolderName(request.getAccountHolderName());
         settlementAccountReference.setBankName(request.getBankName());
@@ -39,9 +38,5 @@ public class SettlementAccountMapperImpl implements SettlementAccountMapper {
         settlementAccountReference.setActive(request.getActive());
         settlementAccountReference.setAccountServiceReferenceId(request.getAccountServiceReferenceId());
         return settlementAccountReference;
-    }
-
-    public Merchant getMerchantById(Long merchantId){
-        return merchantRepository.findById(merchantId).orElse(null);
     }
 }

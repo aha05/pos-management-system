@@ -18,10 +18,10 @@ public class Terminal extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "terminal_code")
+    @Column(name = "terminal_code", unique = true)
     private String terminalCode;
 
-    @Column(name = "serial_number")
+    @Column(name = "serial_number", unique = true)
     private String serialNumber;
 
     @Column(name = "device_model")
