@@ -41,7 +41,7 @@ public class TerminalRequest {
     private Long currentFirmwareId;
 
     @NotBlank(message = "Status Type is mandatory")
-    private String status;
+    private TerminalStatus status;
 
     @NotBlank(message = "Inventory Status is mandatory")
     private String inventoryStatus;

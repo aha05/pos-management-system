@@ -49,8 +49,9 @@ public class Terminal extends BaseEntity {
     @JoinColumn(name = "current_firmware_id")
     private TerminalFirmware currentFirmware;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private TerminalStatus status;
 
     @Column(name = "inventory_status")
     private String inventoryStatus;

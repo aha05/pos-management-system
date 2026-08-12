@@ -28,24 +28,35 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception,
                                                                          HttpServletRequest request) {
-        ErrorResponse errorResponseDTO = new ErrorResponse(
+        ErrorResponse errorResponse = new ErrorResponse(
                 request.getRequestURI(),
                 HttpStatus.NOT_FOUND,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> handleResourceAlreadyExistException(ResourceAlreadyExistException exception, HttpServletRequest request) {
-        ErrorResponse errorResponseDTO = new ErrorResponse(
+        ErrorResponse errorResponse = new ErrorResponse(
                 request.getRequestURI(),
                 HttpStatus.CONFLICT,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(errorResponseDTO, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(InvalidStatusTransitionException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidStatusTransitionException(InvalidStatusTransitionException exception, HttpServletRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                request.getRequestURI(),
+                HttpStatus.CONFLICT,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
 //    @ExceptionHandler(Exception.class)

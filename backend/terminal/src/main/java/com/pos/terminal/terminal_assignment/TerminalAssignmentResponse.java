@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 public class TerminalAssignmentResponse {
     private Long id;
-    private Terminal terminal;
+    private Long terminalId;
     private Long merchantId;
     private Long branchId;
     private String assignmentType;

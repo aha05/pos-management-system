@@ -23,7 +23,7 @@ public class TerminalMapperImpl implements TerminalMapper {
                 .simIccid(terminal.getSimIccid())
                 .macAddress(terminal.getMacAddress())
                 .currentFirmwareId(terminal.getCurrentFirmware().getId())
-                .status(terminal.getStatus())
+                .status(terminal.getStatus().toString())
                 .inventoryStatus(terminal.getInventoryStatus())
                 .registeredAt(terminal.getRegisteredAt())
                 .activatedAt(terminal.getActivatedAt())

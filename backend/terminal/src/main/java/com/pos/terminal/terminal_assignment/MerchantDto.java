@@ -1,12 +1,9 @@
-package com.pos.merchant.merchant;
+package com.pos.terminal.terminal_assignment;
 
-import com.pos.merchant.fee_profile.FeeProfile;
-import lombok.Builder;
 import lombok.Data;
 
 @Data
-@Builder
-public class MerchantResponse {
+public class MerchantDto {
     private Long id;
     private String merchantCode;
     private String legalName;

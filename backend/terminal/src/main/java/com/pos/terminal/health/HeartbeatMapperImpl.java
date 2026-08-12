@@ -31,7 +31,7 @@ public class HeartbeatMapperImpl implements HeartbeatMapper {
     public TerminalHeartbeat toEntity(HeartbeatRequest request) {
         TerminalHeartbeat terminalHeartbeat = new TerminalHeartbeat();
         terminalHeartbeat.setTerminal(
-                terminalService.getTerminalById(
+                terminalService.findTerminalById(
                         request.getTerminalId()));
         terminalHeartbeat.setHeartbeatTime(request.getHeartbeatTime());
         terminalHeartbeat.setBatteryLevel(request.getBatteryLevel());

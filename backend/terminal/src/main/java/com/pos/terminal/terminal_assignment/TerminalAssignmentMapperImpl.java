@@ -1,14 +1,19 @@
 package com.pos.terminal.terminal_assignment;
 
+import com.pos.terminal.terminal.TerminalService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class TerminalAssignmentMapperImpl implements TerminalAssignmentMapper {
+    private final TerminalService terminalService;
+
     @Override
     public TerminalAssignmentResponse toDto(TerminalAssignment terminalAssignment) {
         return TerminalAssignmentResponse.builder()
                 .id(terminalAssignment.getId())
-                .terminal(terminalAssignment.getTerminal())
+                .terminalId(terminalAssignment.getTerminal().getId())
                 .merchantId(terminalAssignment.getMerchantId())
                 .branchId(terminalAssignment.getBranchId())
                 .assignmentType(terminalAssignment.getAssignmentType())
@@ -23,7 +28,7 @@ public class TerminalAssignmentMapperImpl implements TerminalAssignmentMapper {
     @Override
     public TerminalAssignment toEntity(TerminalAssignmentRequest request) {
         TerminalAssignment terminalAssignment = new TerminalAssignment();
-        terminalAssignment.setTerminal(request.getTerminal());
+        terminalAssignment.setTerminal(terminalService.findTerminalById(request.getTerminalId()));
         terminalAssignment.setMerchantId(request.getMerchantId());
         terminalAssignment.setBranchId(request.getBranchId());
         terminalAssignment.setAssignmentType(request.getAssignmentType());

@@ -18,6 +18,13 @@ public class MerchantService {
         );
     }
 
+    public MerchantResponse getMerchantById(Long merchantId){
+       var merchant =  merchantRepository.findById(merchantId).orElseThrow(
+                () -> new ResourceNotFoundException("Merchant", "merchantId", merchantId)
+        );
+        return merchantMapper.toDto(merchant);
+    }
+
     public List<MerchantResponse> getMerchants() {
         return merchantRepository.findAll()
                 .stream()

@@ -24,4 +24,12 @@ public class TerminalController {
     public TerminalResponse addTerminal(@Valid @RequestBody TerminalRequest request) {
         return terminalService.addTerminal(request);
     }
+
+    @PostMapping("/{id}/change-status")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ChangeStatusResponse updateTerminalStatus(
+            @PathVariable(name = "id") Long terminalId,
+            @Valid @RequestBody ChangeStatusRequest request) {
+        return terminalService.updateTerminalStatus(terminalId, request);
+    }
 }
