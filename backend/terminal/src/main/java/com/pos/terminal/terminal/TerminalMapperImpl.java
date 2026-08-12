@@ -34,25 +34,50 @@ public class TerminalMapperImpl implements TerminalMapper {
 
     @Override
     public Terminal toEntity(TerminalRequest request) {
-        Terminal terminal = new Terminal();
-        terminal.setTerminalCode(request.getTerminalCode());
-        terminal.setSerialNumber(request.getSerialNumber());
-        terminal.setDeviceModel(request.getDeviceModel());
-        terminal.setManufacturer(request.getManufacturer());
-        terminal.setTerminalType(request.getTerminalType());
-        terminal.setImei(request.getImei());
-        terminal.setSimNumber(request.getSimNumber());
-        terminal.setSimIccid(request.getSimIccid());
-        terminal.setMacAddress(request.getMacAddress());
-        terminal.setCurrentFirmware(firmwareService
-                .findFirmwareById(
-                        request.getCurrentFirmwareId()));
-        terminal.setStatus(request.getStatus());
-        terminal.setInventoryStatus(request.getInventoryStatus());
-        terminal.setRegisteredAt(request.getRegisteredAt());
-        terminal.setActivatedAt(request.getActivatedAt());
-        terminal.setDeactivatedAt(request.getDeactivatedAt());
-        terminal.setLastSeenAt(request.getLastSeenAt());
-        return terminal;
+        return Terminal.builder()
+                .terminalCode(request.getTerminalCode())
+                .serialNumber(request.getSerialNumber())
+                .deviceModel(request.getDeviceModel())
+                .manufacturer(request.getManufacturer())
+                .terminalType(request.getTerminalType())
+                .imei(request.getImei())
+                .simNumber(request.getSimNumber())
+                .simIccid(request.getSimIccid())
+                .macAddress(request.getMacAddress())
+                .currentFirmware(firmwareService
+                        .findFirmwareById(
+                                request.getCurrentFirmwareId()))
+                .status(request.getStatus())
+                .inventoryStatus(request.getInventoryStatus())
+                .registeredAt(request.getRegisteredAt())
+                .activatedAt(request.getActivatedAt())
+                .deactivatedAt(request.getDeactivatedAt())
+                .lastSeenAt(request.getLastSeenAt())
+                .build();
+    }
+
+    @Override
+    public Terminal update(Terminal terminal, TerminalRequest request) {
+        return Terminal.builder()
+                .id(terminal.getId())
+                .terminalCode(request.getTerminalCode())
+                .serialNumber(request.getSerialNumber())
+                .deviceModel(request.getDeviceModel())
+                .manufacturer(request.getManufacturer())
+                .terminalType(request.getTerminalType())
+                .imei(request.getImei())
+                .simNumber(request.getSimNumber())
+                .simIccid(request.getSimIccid())
+                .macAddress(request.getMacAddress())
+                .currentFirmware(firmwareService
+                        .findFirmwareById(
+                                request.getCurrentFirmwareId()))
+                .status(request.getStatus())
+                .inventoryStatus(request.getInventoryStatus())
+                .registeredAt(request.getRegisteredAt())
+                .activatedAt(request.getActivatedAt())
+                .deactivatedAt(request.getDeactivatedAt())
+                .lastSeenAt(request.getLastSeenAt())
+                .build();
     }
 }

@@ -28,13 +28,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException exception,
                                                                          HttpServletRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(
+        ErrorResponse errorResponseDTO = new ErrorResponse(
                 request.getRequestURI(),
                 HttpStatus.NOT_FOUND,
                 exception.getMessage(),
                 LocalDateTime.now()
         );
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ResourceAlreadyExistException.class)

@@ -13,6 +13,12 @@ import java.util.List;
 public class HealthController {
     private final HealthService healthService;
 
+    @GetMapping("/{id}/status")
+    @ResponseStatus(HttpStatus.OK)
+    public TerminalHealthStatus getHealthStatus(@PathVariable(name = "id") Long terminalId) {
+        return healthService.getHealthStatus(terminalId);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<HeartbeatResponse> getHeartBeat() {

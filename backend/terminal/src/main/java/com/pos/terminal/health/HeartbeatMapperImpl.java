@@ -1,12 +1,13 @@
 package com.pos.terminal.health;
 
+import com.pos.terminal.terminal.Terminal;
 import com.pos.terminal.terminal.TerminalService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class HeartbeatMapperImpl implements HeartbeatMapper {
+public class HeartbeatMapperImpl implements HealthMapper {
     private final TerminalService terminalService;
 
     @Override
@@ -24,6 +25,18 @@ public class HeartbeatMapperImpl implements HeartbeatMapper {
                 .latitude(terminalHeartbeat.getLatitude())
                 .longitude(terminalHeartbeat.getLongitude())
                 .deviceTemperature(terminalHeartbeat.getDeviceTemperature())
+                .build();
+    }
+
+    @Override
+    public TerminalHealthStatus toDto(Terminal terminal, TerminalConnectivityStatus status) {
+        return TerminalHealthStatus.builder()
+                .id(terminal.getId())
+                .terminalCode(terminal.getTerminalCode())
+                .serialNumber(terminal.getSerialNumber())
+                .imei(terminal.getImei())
+                .status(terminal.getStatus())
+                .connectivityStatus(status)
                 .build();
     }
 

@@ -4,6 +4,7 @@ import com.pos.terminal.common.InvalidStatusTransitionException;
 import com.pos.terminal.common.ResourceAlreadyExistException;
 import com.pos.terminal.common.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -64,5 +65,11 @@ public class TerminalService {
                 .terminalId(terminal.getId())
                 .status(terminal.getStatus())
                 .build();
+    }
+
+    public TerminalResponse updateTerminal(TerminalRequest request, Long terminalId) {
+        var terminal =  findTerminalById(terminalId);
+        var update = terminalMapper.update(terminal, request);
+        return terminalMapper.toDto(terminalRepository.save(update));
     }
 }

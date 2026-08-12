@@ -4,13 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pos.terminal.audit.BaseEntity;
 import com.pos.terminal.firmware.TerminalFirmware;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "terminal")
 public class Terminal extends BaseEntity {
