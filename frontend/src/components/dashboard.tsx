@@ -2,7 +2,7 @@ import { Metric }  from "@/components/ui/metric";
 import { Status }  from "@/components/ui/status";
 import { PageHeader }  from "@/components/page-header";
 import { merchants }  from "@/data/data";
-import { Link }  from "@/utils/Link";
+import { Link }  from "@/utils/link";
 
 
 import {

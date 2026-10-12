@@ -6,7 +6,7 @@ import {
 } from "lucide-react";
 import { PageHeader }  from "@/components/page-header";
 import { Status }  from "@/components/ui/status";
-import { Link }  from "@/utils/Link";
+import { Link }  from "@/utils/link";
 
 export const DetailPage = () => {
   return (

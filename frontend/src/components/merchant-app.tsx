@@ -18,6 +18,7 @@ import { MerchantsPage }  from "@/components/merchant";
 import { GenericPage }  from "@/components/generic-page";
 import { Onboarding } from "@/components/onboarding";
 import { DetailPage } from "@/components/detail-page";
+import { WorkspacePage } from "@/components/workspace-page";
 
 
 export function MerchantApp() {
@@ -28,6 +29,11 @@ export function MerchantApp() {
   const [notificationsUnread, setNotificationsUnread] = useState(true);
   const [addMerchantOpen, setAddMerchantOpen] = useState(false);
   const notificationRef = useRef<HTMLDivElement>(null);
+   const [selectedWorkspace, setSelectedWorkspace] = useState({
+    name: "Merchant Services",
+    description: "Operations workspace",
+    initials: "MS",
+  });
   const goToOnboarding = () => {
     window.location.href = "/merchants/new";
   };
@@ -44,7 +50,11 @@ export function MerchantApp() {
     return () => document.removeEventListener("pointerdown", handlePointerDown);
   }, [notificationsOpen]);
   let content =
-    path === "/merchants" ? (
+     selectedWorkspace.initials !== "MS" ? (
+      <WorkspacePage
+        workspace={selectedWorkspace.initials as "TW" | "TX" | "RP"}
+      />
+    ) : path === "/merchants" ? (
       <MerchantsPage />
     ) : path === "/merchants/new" ? (
       <Onboarding />
@@ -61,7 +71,12 @@ export function MerchantApp() {
     );
   return (
     <div className="app-shell">
-      <Sidebar open={open} setOpen={setOpen} />
+      <Sidebar 
+        open={open} 
+        setOpen={setOpen}
+        selectedWorkspace={selectedWorkspace}
+        setSelectedWorkspace={setSelectedWorkspace}
+      />
       <main className="main">
         <header className="topbar">
           <div className="breadcrumbs">
