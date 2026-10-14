@@ -1,9 +1,12 @@
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "@/utils/link";
 import { PageHeader } from "@/components/page-header";
-import { ArrowUpRight, Check, CircleDollarSign, Plus, Trash2 } from "lucide-react";
+import { ArrowUpRight, Check, CircleDollarSign, LoaderCircle, Plus, Trash2 } from "lucide-react";
 import { Card, Checkbox, Input, Select } from "@/components/ui/form-controls";
 import { Modal } from "@/components/ui/modal";
+import { categoryService } from "@/services/merchant/category.service";
+import { feeProfileService } from "@/services/merchant/fee-profile.service";
+import { merchantService } from "@/services/merchant/merchant.service";
 
 type LookupOption = { id: number; name: string };
 type DocumentEntry = {
@@ -19,7 +22,7 @@ type FieldKey =
   | "email" | "phoneNumber" | "website" | "country" | "region" | "city"
   | "subCity" | "woreda" | "address" | "houseNo" | "contactFullName"
   | "contactDesignation" | "contactPhone" | "contactEmail" | "primaryContact"
-  | "bankName" | "accountNumber" | "accountName" | "currency";
+  | "bankName" | "bankCode" | "accountNumber" | "accountHolderName" | "currency" | "isPrimary" | "active" | "accountServiceReference";
 type FormValues = Record<FieldKey, string | boolean>;
 type FieldDefinition = {
   key: FieldKey;
@@ -71,25 +74,29 @@ const getFields = (categories: LookupOption[], feeProfiles: LookupOption[]): Rec
     requiredField("phoneNumber", "Phone number", "tel"),
     requiredField("website", "Website", "url"),
     { ...requiredField("country", "Country", "select"), options: optionList(countries) },
-    { ...requiredField("woreda", "Woreda", "select"), options: optionList(regions) },
-    { ...requiredField("subCity", "Sub City", "select"), options: optionList(regions) },
-    { ...optionalField("region", "Region", "select"), options: optionList(regions) },
+    { ...optionalField("woreda", "Woreda", "select"), options: optionList(regions) },
+    { ...optionalField("subCity", "Sub City", "select"), options: optionList(regions) },
+    { ...requiredField("region", "Region", "select"), options: optionList(regions) },
     { ...requiredField("city", "City", "select"), options: optionList(cities) },
     requiredField("address", "Address"),
-    requiredField("houseNo", "House No."),
+    optionalField("houseNo", "House No."),
   ],
   3: [
-    optionalField("contactFullName", "Full name"),
-    optionalField("contactDesignation", "Designation"),
-    optionalField("contactPhone", "Phone number", "tel"),
-    optionalField("contactEmail", "Email", "email"),
+    requiredField("contactFullName", "Full name"),
+    requiredField("contactDesignation", "Designation"),
+    requiredField("contactPhone", "Phone number", "tel"),
+    requiredField("contactEmail", "Email", "email"),
     { ...optionalField("primaryContact", "Primary Contact", "checkbox") },
   ],
   4: [
-    { ...optionalField("bankName", "Bank", "select"), options: optionList(banks) },
-    optionalField("accountNumber", "Account number"),
-    optionalField("accountName", "Account name"),
-    { ...optionalField("currency", "Currency", "select"), options: optionList(currencies) },
+    { ...requiredField("bankName", "Bank", "select"), options: optionList(banks) },
+    requiredField("bankCode", "Bank Code"),
+    requiredField("accountNumber", "Account number"),
+    requiredField("accountHolderName", "Account holder name"),
+    { ...requiredField("currency", "Currency", "select"), options: optionList(currencies) },
+    requiredField("accountServiceReference", "Account Service Reference"),
+    optionalField("isPrimary", "Is primary", "checkbox"),
+    optionalField("active", "Active", "checkbox"),
   ],
 });
 
@@ -99,7 +106,7 @@ const initialValues: FormValues = {
   email: "", phoneNumber: "", website: "", country: "", region: "", city: "",
   subCity: "", woreda: "", address: "", houseNo: "", contactFullName: "",
   contactDesignation: "", contactPhone: "", contactEmail: "", primaryContact: false,
-  bankName: "", accountNumber: "", accountName: "", currency: "",
+  bankName: "", bankCode: "", accountNumber: "", accountHolderName: "", currency: "", accountServiceReference: "", isPrimary: false, active: false
 };
 
 const sectionTitles: Record<number, string> = {
@@ -112,7 +119,7 @@ const sectionTitles: Record<number, string> = {
 
 export const Onboarding = () => {
   const [step, setStep] = useState(1);
-  const [values, setValues] = useState<FormValues>(initialValues);
+  const [formData, setFormData] = useState<FormValues>(initialValues);
   const [documents, setDocuments] = useState<DocumentEntry[]>([
     { id: 0, documentType: "", fileName: "", storagePath: "", verified: false },
   ]);
@@ -123,8 +130,13 @@ export const Onboarding = () => {
   const [requestError, setRequestError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submitStage, setSubmitStage] = useState("");
   const [created, setCreated] = useState(false);
-  const formRef = useRef<HTMLFormElement>(null);
+  const [createdMerchantId, setCreatedMerchantId] = useState<number | null>(null);
+  const [contactSaved, setContactSaved] = useState(false);
+  const [settlementSaved, setSettlementSaved] = useState(false);
+  const [savedDocumentIds, setSavedDocumentIds] = useState<number[]>([]);
+  const fieldsRef = useRef<HTMLDivElement>(null);
   const editSnapshot = useRef<{ values: FormValues; documents: DocumentEntry[] } | null>(null);
   const fieldsByStep = getFields(categories, feeProfiles);
 
@@ -132,20 +144,17 @@ export const Onboarding = () => {
     const loadLookups = async () => {
       const loadLookup = async <T,>(
         label: string,
-        url: string,
+        request: () => Promise<T[]>,
         mapRows: (rows: T[]) => LookupOption[],
         setOptions: (options: LookupOption[]) => void,
       ): Promise<string | null> => {
         try {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-          const rows = await response.json() as T[];
-          if (!Array.isArray(rows)) throw new Error("The response was not a list.");
+          const rows = await request();
           setOptions(mapRows(rows));
           return null;
         } catch (error) {
           const detail = error instanceof Error ? error.message : "Unknown request error";
-          const browserAccessHint = detail === "Failed to fetch"
+          const browserAccessHint = detail === "Failed to fetch" || detail === "Network Error"
             ? "The browser could not read the response; check the request URL, network, or CORS settings."
             : detail;
           return `${label} lookup failed: ${browserAccessHint}`;
@@ -155,13 +164,13 @@ export const Onboarding = () => {
       const errors = await Promise.all([
         loadLookup<{ id: number; categoryName: string }>(
           "Category",
-          "http://localhost:8080/merchant/category",
+          categoryService.getAll,
           (rows) => rows.map(({ id, categoryName }) => ({ id, name: categoryName })),
           setCategories,
         ),
         loadLookup<{ id: number; profileName: string }>(
           "Fee profile",
-          "http://localhost:8080/fee-profile",
+          feeProfileService.getAll,
           (rows) => rows.map(({ id, profileName }) => ({ id, name: profileName })),
           setFeeProfiles,
         ),
@@ -172,7 +181,7 @@ export const Onboarding = () => {
   }, []);
 
   const updateValue = (key: FieldKey, value: string | boolean) => {
-    setValues((current) => ({ ...current, [key]: value }));
+    setFormData((current) => ({ ...current, [key]: value }));
     setSuccessMessage("");
   };
 
@@ -185,7 +194,7 @@ export const Onboarding = () => {
     if (field.kind === "checkbox") {
       return (
         <label className="inline-checkbox-field" key={field.key}>
-          <Checkbox checked={Boolean(values[field.key])} onChange={(event) => updateValue(field.key, event.currentTarget.checked)} />
+          <Checkbox checked={Boolean(formData[field.key])} onChange={(event) => updateValue(field.key, event.currentTarget.checked)} />
           <span>{field.label}</span>
         </label>
       );
@@ -196,7 +205,7 @@ export const Onboarding = () => {
         <div className="input-wrap">
           {field.kind === "select" ? (
             <Select
-              value={String(values[field.key])}
+              value={String(formData[field.key])}
               required={field.required}
               onChange={(event) => updateValue(field.key, event.currentTarget.value)}
             >
@@ -206,7 +215,7 @@ export const Onboarding = () => {
           ) : (
             <Input
               type={field.kind ?? "text"}
-              value={String(values[field.key])}
+              value={String(formData[field.key])}
               required={field.required}
               onChange={(event) => updateValue(field.key, event.currentTarget.value)}
               placeholder={`Enter ${field.label.toLowerCase()}`}
@@ -230,9 +239,9 @@ export const Onboarding = () => {
             )}
           </div>
           <div className="document-grid">
-            <label>Document type<div className="input-wrap"><Input value={document.documentType} onChange={(event) => updateDocument(document.id, "documentType", event.currentTarget.value)} placeholder="Enter document type" /></div></label>
-            <label>File name<div className="input-wrap"><Input value={document.fileName} onChange={(event) => updateDocument(document.id, "fileName", event.currentTarget.value)} placeholder="Enter file name" /></div></label>
-            <label>Storage path<div className="input-wrap"><Input value={document.storagePath} onChange={(event) => updateDocument(document.id, "storagePath", event.currentTarget.value)} placeholder="Enter storage path" /></div></label>
+            <label>Document type<div className="input-wrap"><Input required value={document.documentType} onChange={(event) => updateDocument(document.id, "documentType", event.currentTarget.value)} placeholder="Enter document type" /></div></label>
+            <label>File name<div className="input-wrap"><Input required value={document.fileName} onChange={(event) => updateDocument(document.id, "fileName", event.currentTarget.value)} placeholder="Enter file name" /></div></label>
+            <label>Storage path<div className="input-wrap"><Input required value={document.storagePath} onChange={(event) => updateDocument(document.id, "storagePath", event.currentTarget.value)} placeholder="Enter storage path" /></div></label>
             <label className="document-verified"><Checkbox checked={document.verified} onChange={(event) => updateDocument(document.id, "verified", event.currentTarget.checked)} /><span>Verified</span></label>
           </div>
         </section>
@@ -248,80 +257,135 @@ export const Onboarding = () => {
       {targetStep === 5 ? renderDocuments() : fieldsByStep[targetStep]?.map(renderField)}
       {targetStep === 4 && (
         <div className="full info-note">
-          <CircleDollarSign /> Settlement details can be reviewed here, but the current merchant creation service does not save settlement accounts yet.
+          <CircleDollarSign /> This settlement account will be linked to the merchant after the merchant profile is created.
         </div>
       )}
     </div>
   );
 
   const continueStep = () => {
-    if (formRef.current?.reportValidity()) setStep((current) => Math.min(6, current + 1));
+    const controls = fieldsRef.current?.querySelectorAll<HTMLInputElement | HTMLSelectElement>("input, select");
+    if (!controls || Array.from(controls).every((control) => control.reportValidity())) {
+      setStep((current) => Math.min(6, current + 1));
+    }
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (step !== 6 || created) return;
+  const handleSubmit = async () => {
+    if (step !== 6 || submitting || created) return;
     setRequestError("");
     setSuccessMessage("");
-    const requiredKeys: FieldKey[] = [
-      "merchantCode", "legalName", "tradeName", "businessLicense", "tinNumber",
-      "businessType", "merchantCategoryId", "feeProfileId", "status", "email",
-      "phoneNumber", "website", "country", "city", "subCity", "woreda", "address", "houseNo",
-    ];
-    const missingFields = requiredKeys.filter((key) => !String(values[key]).trim());
-    if (missingFields.length) {
-      setRequestError("Complete all required business and contact fields before submitting.");
+    const requiredFields = Object.values(fieldsByStep).flat().filter((field) => field.required && field.kind !== "checkbox");
+    const missingFields = requiredFields
+      .filter((field) => !String(formData[field.key]).trim())
+      .map((field) => field.label);
+    const incompleteDocuments = documents.flatMap((document, index) => [
+      !document.documentType.trim() ? `Document ${index + 1} type` : null,
+      !document.fileName.trim() ? `Document ${index + 1} file name` : null,
+      !document.storagePath.trim() ? `Document ${index + 1} storage path` : null,
+    ].filter((label): label is string => label !== null));
+    const allMissingFields = [...missingFields, ...incompleteDocuments];
+    if (allMissingFields.length) {
+      setRequestError(`Complete the required fields: ${allMissingFields.join(", ")}.`);
       return;
     }
     setSubmitting(true);
+    setSubmitStage(createdMerchantId === null ? "Creating merchant…" : "Saving remaining details…");
     const payload = {
-      merchantCode: values.merchantCode,
-      legalName: values.legalName,
-      tradeName: values.tradeName,
-      businessLicense: values.businessLicense,
-      tinNumber: values.tinNumber,
-      businessType: values.businessType,
-      merchantCategoryId: Number(values.merchantCategoryId),
-      feeProfileId: Number(values.feeProfileId),
-      status: values.status,
-      phoneNumber: values.phoneNumber,
-      email: values.email,
-      website: values.website,
-      country: values.country,
-      city: values.city,
-      subCity: values.subCity,
-      woreda: values.woreda,
-      address: values.address,
-      houseNo: values.houseNo,
+      merchantCode: String(formData.merchantCode),
+      legalName: String(formData.legalName),
+      tradeName: String(formData.tradeName),
+      businessLicense: String(formData.businessLicense),
+      tinNumber: String(formData.tinNumber),
+      businessType: String(formData.businessType),
+      merchantCategoryId: Number(formData.merchantCategoryId),
+      feeProfileId: Number(formData.feeProfileId),
+      status: String(formData.status),
+      phoneNumber: String(formData.phoneNumber),
+      email: String(formData.email),
+      website: String(formData.website),
+      country: String(formData.country),
+      city: String(formData.city),
+      subCity: String(formData.subCity),
+      woreda: String(formData.woreda),
+      address: String(formData.address),
+      houseNo: String(formData.houseNo),
     };
+    let merchantId = createdMerchantId;
+    let currentStage = "merchant";
     try {
-      const response = await fetch("http://localhost:8080/merchant/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-      if (!response.ok) {
-        const detail = await response.text();
-        throw new Error(detail || `Merchant creation failed (${response.status}).`);
+      if (merchantId === null) {
+        const result = await merchantService.createMerchant(payload);
+        merchantId = result.id;
+        if (!merchantId) throw new Error("The merchant creation response did not include its ID.");
+        setCreatedMerchantId(merchantId);
       }
-      const result = await response.json();
+
+      if (!contactSaved) {
+        currentStage = "contact person";
+        setSubmitStage("Saving contact person…");
+        await merchantService.addContactPerson({
+          merchantId,
+          fullName: String(formData.contactFullName),
+          designation: String(formData.contactDesignation),
+          phoneNumber: String(formData.contactPhone),
+          email: String(formData.contactEmail),
+          primaryContact: Boolean(formData.primaryContact),
+        });
+        setContactSaved(true);
+      }
+
+      if (!settlementSaved) {
+        currentStage = "settlement account";
+        setSubmitStage("Saving settlement account…");
+        await merchantService.addSettlementAccount({
+          merchantId,
+          accountNumber: String(formData.accountNumber),
+          accountHolderName: String(formData.accountHolderName),
+          bankName: String(formData.bankName),
+          bankCode: String(formData.bankCode),
+          currency: String(formData.currency),
+          accountServiceReferenceId: String(formData.accountServiceReference),
+          isPrimary: Boolean(formData.isPrimary),
+          active: Boolean(formData.active),
+        });
+        setSettlementSaved(true);
+      }
+
+      for (const [index, document] of documents.entries()) {
+        if (savedDocumentIds.includes(document.id)) continue;
+        currentStage = `document ${index + 1}`;
+        setSubmitStage(`Saving ${currentStage}…`);
+        await merchantService.addMerchantDocument({
+          merchantId,
+          documentType: document.documentType,
+          fileName: document.fileName,
+          storagePath: document.storagePath,
+          verified: document.verified,
+        });
+        setSavedDocumentIds((ids) => [...ids, document.id]);
+      }
+
       setCreated(true);
       setLookupError("");
-      setSuccessMessage(`Merchant ${result.merchantCode ?? values.merchantCode} was created successfully.`);
+      setSuccessMessage(`Merchant ${formData.merchantCode} and its contact, settlement account, and documents were created successfully.`);
     } catch (error) {
-      setRequestError(error instanceof Error ? error.message : "Unable to create merchant.");
+      const detail = error instanceof Error ? error.message : "An unknown error occurred.";
+      setRequestError(merchantId === null
+        ? detail
+        : `Merchant ${merchantId} was created, but saving the ${currentStage} failed. ${detail} Submit again to retry the remaining details.`);
     } finally {
       setSubmitting(false);
+      setSubmitStage("");
     }
   };
 
   const openEditor = (targetStep: number) => {
-    editSnapshot.current = { values: { ...values }, documents: documents.map((item) => ({ ...item })) };
+    editSnapshot.current = { values: { ...formData }, documents: documents.map((item) => ({ ...item })) };
     setEditingStep(targetStep);
   };
   const cancelEdit = () => {
     if (editSnapshot.current) {
-      setValues(editSnapshot.current.values);
+      setFormData(editSnapshot.current.values);
       setDocuments(editSnapshot.current.documents);
     }
     editSnapshot.current = null;
@@ -332,7 +396,7 @@ export const Onboarding = () => {
     setEditingStep(null);
   };
   const displayValue = (field: FieldDefinition) => {
-    const value = values[field.key];
+    const value = formData[field.key];
     if (typeof value === "boolean") return value ? "Yes" : "No";
     if (!value) return "Not provided";
     return field.options?.find((option) => option.value === value)?.label ?? value;
@@ -353,7 +417,7 @@ export const Onboarding = () => {
         ))}
       </div>
       <Card className="form-card">
-        <form ref={formRef} onSubmit={handleSubmit}>
+        <div ref={fieldsRef}>
           <div className="form-title">
             <h2>{steps[step - 1]}</h2>
             <p>{step === 1 ? "Enter the merchant's registered business details." : step === 2 ? "Add the merchant's contact and location details." : step === 3 ? "Add a primary contact person." : step === 4 ? "Add the settlement account details." : step === 5 ? "Add supporting business documents." : "Review the information you entered before creating the merchant."}</p>
@@ -362,7 +426,7 @@ export const Onboarding = () => {
           {step < 6 ? renderStepFields(step) : (
             <div className="review-grid">
               <div className="full info-note">
-                Contact person, settlement account, and document details are shown for review, but the current merchant creation API only saves the merchant profile and its primary contact/location fields.
+                On submit, the merchant is created first. Its returned ID is then used to save the contact person, settlement account, and each document.
               </div>
               {steps.slice(0, 5).map((title, index) => {
                 const targetStep = index + 1;
@@ -382,7 +446,7 @@ export const Onboarding = () => {
                         ))}
                       </div>
                     )}
-                    <button type="button" className="text-link" disabled={created} onClick={() => openEditor(targetStep)}>Edit</button>
+                    <button type="button" className="text-link" disabled={created || createdMerchantId !== null} onClick={() => openEditor(targetStep)}>Edit</button>
                   </section>
                 );
               })}
@@ -391,16 +455,19 @@ export const Onboarding = () => {
           {requestError && <div className="form-error" role="alert">{requestError}</div>}
           {successMessage && <div className="form-success" role="status">{successMessage}</div>}
           <div className="form-footer">
-            <button type="button" className="button outline" disabled={step === 1 || submitting} onClick={() => setStep((current) => current - 1)}>Back</button>
+            <button type="button" className="button outline" disabled={step === 1 || submitting || createdMerchantId !== null} onClick={() => setStep((current) => current - 1)}>Back</button>
             <div>
               {step < 6 ? (
                 <button type="button" className="button primary" onClick={continueStep}>Continue <ArrowUpRight /></button>
               ) : (
-                <button type="submit" className="button primary" disabled={submitting || created}>{submitting ? "Submitting…" : created ? "Merchant created" : "Create merchant"} {!submitting && !created && <ArrowUpRight />}</button>
+                <button type="button" className="button primary" onClick={handleSubmit} disabled={submitting || created}>
+                  {submitting ? <><LoaderCircle className="submit-spinner" /> {submitStage || "Saving…"}</> : created ? "Merchant created" : "Create merchant"}
+                  {!submitting && !created && <ArrowUpRight />}
+                </button>
               )}
             </div>
           </div>
-        </form>
+        </div>
       </Card>
       {editingStep !== null && (
         <Modal title={sectionTitles[editingStep]} onClose={cancelEdit} footer={

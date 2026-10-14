@@ -1607,6 +1607,14 @@ th:first-child {
   width: 14px;
   height: 14px;
 }
+.submit-spinner {
+  width: 15px;
+  height: 15px;
+  animation: submit-spin 0.8s linear infinite;
+}
+@keyframes submit-spin {
+  to { transform: rotate(360deg); }
+}
 .form-grid input,
 .form-grid select,
 .form-grid textarea {
