@@ -3,6 +3,8 @@ export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localho
 export const API_ENDPOINTS = {
   merchant: "/merchant",
   merchantById: (id: number) => `/merchant/${id}`,
+  merchantInfo: "/merchant/info",
+  merchantInfoById: (id: number) => `/merchant/info/${id}`,
   createMerchant: "/merchant/create",
   categories: "/merchant/category",
   feeProfiles: "/fee-profile",

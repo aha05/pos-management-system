@@ -58,9 +58,9 @@ export function MerchantApp() {
       <MerchantsPage />
     ) : path === "/merchants/new" ? (
       <Onboarding />
-    ) : path.includes("/merchants/MER-000001/branches") ? (
+    ) : /^\/merchants\/\d+\/branches/.test(path) ? (
       <GenericPage type="branches" />
-    ) : path.startsWith("/merchants/MER-000001") ? (
+    ) : /^\/merchants\/\d+$/.test(path) ? (
       <DetailPage />
     ) : path === "/merchant-categories" ? (
       <GenericPage type="categories" />

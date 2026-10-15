@@ -83,7 +83,7 @@ export const Sidebar = ({
             <ShieldCheck />
           </div>
           <div>
-            <b>meridian</b>
+            <b>POSMS</b>
             <span className="uppercase">{selectedWorkspace.name}</span>
           </div>
         </div>

@@ -1,31 +1,48 @@
-import { useMemo, useState } from "react";
-import {
-  Filter,
-  MoreHorizontal,
-  Plus,
-  Search,
-  WalletCards,
-} from "lucide-react";
-import { Status }  from "@/components/ui/status";
-import { PageHeader }  from "@/components/page-header";
-import { merchants }  from "@/data/data";
-import { Link }  from "@/utils/link";
-
-
+import { useEffect, useMemo, useState } from "react";
+import { Filter, MoreHorizontal, Plus, Search, WalletCards } from "lucide-react";
+import { Status } from "@/components/ui/status";
+import { PageHeader } from "@/components/page-header";
+import { merchantService, type MerchantInformation } from "@/services/merchant/merchant.service";
+import { Link } from "@/utils/link";
 
 export const MerchantsPage = () => {
+  const [merchants, setMerchants] = useState<MerchantInformation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("All statuses");
+
+  useEffect(() => {
+    let isCurrent = true;
+
+    const loadMerchants = async () => {
+      try {
+        const data = await merchantService.getAllMerchantInfo();
+        if (isCurrent) setMerchants(data);
+      } catch {
+        if (isCurrent) setError("Unable to load merchants. Please try again.");
+      } finally {
+        if (isCurrent) setLoading(false);
+      }
+    };
+
+    void loadMerchants();
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
+
   const filtered = useMemo(
     () =>
       merchants.filter(
-        (m) =>
-          (m.name.toLowerCase().includes(query.toLowerCase()) ||
-            m.id.toLowerCase().includes(query.toLowerCase())) &&
-          (status === "All statuses" || m.status === status),
+        (merchant) =>
+          (merchant.tradeName.toLowerCase().includes(query.toLowerCase()) ||
+            merchant.merchantCode.toLowerCase().includes(query.toLowerCase())) &&
+          (status === "All statuses" || merchant.status.toLowerCase() === status.toLowerCase()),
       ),
-    [query, status],
+    [merchants, query, status],
   );
+
   return (
     <>
       <PageHeader
@@ -44,10 +61,10 @@ export const MerchantsPage = () => {
             <input
               placeholder="Search by name or merchant ID"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(event) => setQuery(event.target.value)}
             />
           </div>
-          <select value={status} onChange={(e) => setStatus(e.target.value)}>
+          <select value={status} onChange={(event) => setStatus(event.target.value)}>
             <option>All statuses</option>
             <option>Active</option>
             <option>Suspended</option>
@@ -70,7 +87,7 @@ export const MerchantsPage = () => {
           <table>
             <thead>
               <tr>
-                <th>Merchant ID</th>
+                <th>Merchant Code</th>
                 <th>Business name</th>
                 <th>Category</th>
                 <th>Contact</th>
@@ -82,38 +99,37 @@ export const MerchantsPage = () => {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((m) => (
-                <tr key={m.id}>
+              {loading && <tr><td colSpan={9}>Loading merchants…</td></tr>}
+              {!loading && error && <tr><td colSpan={9}>{error}</td></tr>}
+              {!loading && !error && filtered.length === 0 && (
+                <tr><td colSpan={9}>No merchants found.</td></tr>
+              )}
+              {!loading && !error && filtered.map((merchant) => (
+                <tr key={merchant.id}>
                   <td>
-                    <Link className="id-link" href={`/merchants/${m.id}`}>
-                      {m.id}
+                    <Link className="id-link" href={`/merchants/${merchant.id}`}>
+                      {merchant.merchantCode}
                     </Link>
                   </td>
                   <td>
                     <div className="table-name">
-                      <div className="merchant-avatar">
-                        {m.name.slice(0, 2)}
-                      </div>
+                      <div className="merchant-avatar">{merchant.tradeName.slice(0, 2)}</div>
                       <div>
-                        <b>{m.name}</b>
-                        <span>{m.type}</span>
+                        <b>{merchant.tradeName}</b>
+                        <span>{merchant.businessType}</span>
                       </div>
                     </div>
                   </td>
-                  <td>{m.category}</td>
-                  <td>{m.phone}</td>
-                  <td>{m.branches}</td>
+                  <td>{merchant.category}</td>
+                  <td>{merchant.phoneNumber}</td>
+                  <td>{merchant.branch || "—"}</td>
                   <td>
-                    <span className="account">
-                      <WalletCards /> {m.account}
-                    </span>
+                    <span className="account"><WalletCards /> {merchant.settlementAccount || "—"}</span>
                   </td>
+                  <td><Status value={merchant.status} /></td>
+                  <td>{new Date(merchant.createdAt).toLocaleDateString()}</td>
                   <td>
-                    <Status value={m.status} />
-                  </td>
-                  <td>{m.date}</td>
-                  <td>
-                    <button className="icon-button">
+                    <button className="icon-button" aria-label={`More actions for ${merchant.tradeName}`}>
                       <MoreHorizontal />
                     </button>
                   </td>
@@ -123,7 +139,7 @@ export const MerchantsPage = () => {
           </table>
         </div>
         <div className="table-footer">
-          <span>Showing {filtered.length} of 1,248 merchants</span>
+          <span>Showing {filtered.length} of {merchants.length} merchants</span>
           <div>
             <button className="pagination">‹</button>
             <button className="pagination current">1</button>
@@ -135,4 +151,4 @@ export const MerchantsPage = () => {
       </div>
     </>
   );
-}
+};

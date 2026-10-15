@@ -27,6 +27,32 @@ export interface Merchant extends MerchantRequest {
   id: number;
 }
 
+// Merchant
+export interface MerchantInformation {
+  id: number;
+  merchantCode: string;
+  legalName: string;
+  tradeName: string;
+  businessLicense: string;
+  tinNumber: string;
+  businessType: string;
+  category: string;
+  branch: number;
+  settlementAccount: string;
+  feeProfile: string;
+  status: string;
+  phoneNumber: string;
+  email: string;
+  website: string;
+  country: string;
+  city: string;
+  subCity: string;
+  woreda: string;
+  address: string;
+  houseNo: string;
+  createdAt: Date;
+}
+
 // Contact Person
 export interface ContactPersonRequest {
     merchantId: number;
@@ -83,6 +109,21 @@ export const merchantService = {
 
   getById: async (id: number): Promise<Merchant> => {
     const response = await api.get<Merchant>(API_ENDPOINTS.merchantById(id));
+    return response.data;
+  },
+
+  getAllMerchantInfo: async (): Promise<MerchantInformation[]> => {
+    const response = await api.get<MerchantInformation[]>(API_ENDPOINTS.merchantInfo);
+    return response.data;
+  },
+
+  getMerchantInfoById: async (id: number): Promise<MerchantInformation> => {
+    const response = await api.get<MerchantInformation>(API_ENDPOINTS.merchantInfoById(id));
+    return response.data;
+  },
+
+  updateMerchant: async (id: number, data: MerchantRequest): Promise<Merchant> => {
+    const response = await api.put<Merchant>(API_ENDPOINTS.merchantById(id), data);
     return response.data;
   },
 

@@ -1207,6 +1207,13 @@ th:first-child {
   gap: 18px 20px;
   min-height: 210px;
 }
+.form-grid > .form-title {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+.form-grid > .form-title:not(:first-child) {
+  margin-top: 20px;
+}
 .form-grid label {
   color: #55647b;
   font-size: 10px;
@@ -1408,9 +1415,12 @@ th:first-child {
   box-shadow: 0 24px 70px #17203333;
 }
 .edit-modal {
-  width: min(700px, 100%);
+  width: min(1040px, 100%);
   max-height: 90vh;
   overflow-y: auto;
+}
+.edit-modal .form-title {
+  margin-bottom: 8px;
 }
 .edit-modal-body {
   margin-top: 22px;
