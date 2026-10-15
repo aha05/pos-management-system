@@ -10,18 +10,18 @@ import java.util.List;
 @RestController
 @RequestMapping("merchant-branch")
 @RequiredArgsConstructor
-public class MerchantBranchController {
-    private final MerchantBranchService merchantBranchService;
+public class BranchController {
+    private final BranchService branchService;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<MerchantBranchResponse> getMerchantBranches() {
-        return merchantBranchService.getMerchantBranches();
+    public List<BranchResponse> getBranches() {
+        return branchService.getMerchantBranches();
     }
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public MerchantBranchResponse addMerchantBranch(@Valid @RequestBody MerchantBranchRequest request) {
-        return merchantBranchService.addMerchantBranch(request);
+    public BranchResponse addBranch(@Valid @RequestBody BranchRequest request) {
+        return branchService.addMerchantBranch(request);
     }
 }

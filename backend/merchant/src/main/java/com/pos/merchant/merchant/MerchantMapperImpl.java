@@ -2,6 +2,7 @@ package com.pos.merchant.merchant;
 
 import com.pos.merchant.category.CategoryService;
 import com.pos.merchant.fee_profile.FeeProfileService;
+import com.pos.merchant.settlement_account_reference.SettlementAccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -60,5 +61,33 @@ public class MerchantMapperImpl implements MerchantMapper {
         merchant.setHouseNo(request.getHouseNo());
 
         return merchant;
+    }
+
+    @Override
+    public MerchantInformation toMerchantInfo(Merchant merchant, String settlementAccountNumber, Long branches) {
+       return MerchantInformation.builder()
+               .id(merchant.getId())
+               .merchantCode(merchant.getMerchantCode())
+               .legalName(merchant.getLegalName())
+               .tradeName(merchant.getTradeName())
+               .tinNumber(merchant.getTinNumber())
+               .businessLicense(merchant.getBusinessLicense())
+               .businessType(merchant.getBusinessType())
+               .category(merchant.getMerchantCategory().getCategoryName())
+               .feeProfile(merchant.getFeeProfile().getProfileName())
+               .settlementAccount(settlementAccountNumber)
+               .branch(branches)
+               .status(merchant.getStatus().toString())
+               .phoneNumber(merchant.getPhoneNumber())
+               .email(merchant.getEmail())
+               .website(merchant.getWebsite())
+               .country(merchant.getCountry())
+               .city(merchant.getCity())
+               .subCity(merchant.getSubCity())
+               .woreda(merchant.getWoreda())
+               .address(merchant.getAddress())
+               .houseNo(merchant.getHouseNo())
+               .createdAt(merchant.getCreatedAt())
+               .build();
     }
 }

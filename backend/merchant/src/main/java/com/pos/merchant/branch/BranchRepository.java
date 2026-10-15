@@ -2,5 +2,8 @@ package com.pos.merchant.branch;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MerchantBranchRepository extends JpaRepository<MerchantBranch, Long> {
+import java.util.List;
+
+public interface BranchRepository extends JpaRepository<Branch, Long> {
+    List<Branch> findAllByMerchantId(Long id);
 }

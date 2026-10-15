@@ -27,10 +27,11 @@ public class MerchantContactMapperImpl implements MerchantContactMapper {
         MerchantContact merchantContact = new MerchantContact();
         merchantContact.setMerchant(merchantService
                 .findMerchantById(request.getMerchantId()));
+        merchantContact.setFullName(request.getFullName());
         merchantContact.setDesignation(request.getDesignation());
-        merchantContact.setPhoneNumber(merchantContact.getPhoneNumber());
-        merchantContact.setEmail(merchantContact.getEmail());
-        merchantContact.setPrimaryContact(merchantContact.getPrimaryContact());
+        merchantContact.setPhoneNumber(request.getPhoneNumber());
+        merchantContact.setEmail(request.getEmail());
+        merchantContact.setPrimaryContact(request.getPrimaryContact());
         return merchantContact;
     }
 }

@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class MerchantBranchRequest {
+public class BranchRequest {
     @NotNull(message = "Merchant Id is mandatory")
     private Long merchantId;
 

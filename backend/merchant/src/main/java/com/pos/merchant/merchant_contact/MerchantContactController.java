@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("merchant-contact")
+@RequestMapping("merchant/contact")
 @RequiredArgsConstructor
 public class MerchantContactController {
     private final MerchantContactService merchantContactService;

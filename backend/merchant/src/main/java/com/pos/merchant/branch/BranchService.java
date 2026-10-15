@@ -7,20 +7,20 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class MerchantBranchService {
-    private final MerchantBranchRepository merchantBranchRepository;
-    private final MerchantBranchMapper merchantBranchMapper;
+public class BranchService {
+    private final BranchRepository branchRepository;
+    private final BranchMapper branchMapper;
 
-    public List<MerchantBranchResponse> getMerchantBranches() {
-        return merchantBranchRepository.findAll()
+    public List<BranchResponse> getMerchantBranches() {
+        return branchRepository.findAll()
                 .stream()
-                .map(merchantBranchMapper::toDto)
+                .map(branchMapper::toDto)
                 .toList();
     }
 
-    public MerchantBranchResponse addMerchantBranch(MerchantBranchRequest request) {
-        var merchantBranch = merchantBranchMapper.toEntity(request);
-        merchantBranchRepository.save(merchantBranch);
-        return merchantBranchMapper.toDto(merchantBranch);
+    public BranchResponse addMerchantBranch(BranchRequest request) {
+        var merchantBranch = branchMapper.toEntity(request);
+        branchRepository.save(merchantBranch);
+        return branchMapper.toDto(merchantBranch);
     }
 }

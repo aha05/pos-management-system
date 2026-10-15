@@ -25,9 +25,22 @@ public class MerchantController {
         return merchantService.getMerchantById(merchantId);
     }
 
+    @GetMapping("/info")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MerchantInformation> getMerchantInfo() {
+        return merchantService.getMerchantInfo();
+    }
+
+    @GetMapping("/info/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public MerchantInformation getMerchantInfoById(@PathVariable(name = "id") Long merchantId) {
+        return merchantService.getMerchantInfoById(merchantId);
+    }
+
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     public MerchantResponse addMerchant(@Valid @RequestBody MerchantRequest request) {
         return merchantService.addMerchant(request);
     }
+
 }

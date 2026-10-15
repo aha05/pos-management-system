@@ -6,6 +6,7 @@ CREATE TABLE merchants
     trade_name VARCHAR(255),
     tin_number varchar(50),
     business_license varchar(255),
+    business_type varchar(255),
 
     category_id BIGINT NOT NULL,
     fee_profile_id BIGINT NOT NULL,
@@ -17,6 +18,7 @@ CREATE TABLE merchants
     website VARCHAR(100),
 
     country varchar(50),
+    region varchar(50),
     city VARCHAR(50),
     sub_city VARCHAR(50),
     woreda VARCHAR(50),
