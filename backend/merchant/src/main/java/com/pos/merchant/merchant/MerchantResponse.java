@@ -1,6 +1,5 @@
 package com.pos.merchant.merchant;
 
-import com.pos.merchant.fee_profile.FeeProfile;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,6 +12,7 @@ public class MerchantResponse {
     private String tradeName;
     private String tinNumber;
     private String businessLicense;
+    private String businessType;
     private Long categoryId;
     private Long feeProfileId;
     private String status;

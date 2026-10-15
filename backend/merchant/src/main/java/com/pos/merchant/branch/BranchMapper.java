@@ -1,6 +1,6 @@
 package com.pos.merchant.branch;
 
-public interface MerchantBranchMapper {
-    MerchantBranchResponse toDto(MerchantBranch merchantBranch);
-    MerchantBranch toEntity(MerchantBranchRequest request);
+public interface BranchMapper {
+    BranchResponse toDto(Branch branch);
+    Branch toEntity(BranchRequest request);
 }

@@ -21,6 +21,9 @@ public class MerchantRequest {
     @NotBlank(message = "Business License is mandatory")
     private String businessLicense;
 
+    @NotBlank(message = "Business Type is mandatory")
+    private String businessType;
+
     @NotNull(message = "Merchant Category is mandatory")
     private Long merchantCategoryId;
 

@@ -32,6 +32,12 @@ public class Merchant extends BaseEntity {
     @Column(name = "business_license")
     private String businessLicense;
 
+    @Column(name = "business_type")
+    private String businessType;
+
+    @Column(name = "region")
+    private String region;
+
     @ManyToOne
     @JsonIgnore
     @JoinColumn(name = "category_id")

@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class MerchantBranchResponse {
+public class BranchResponse {
     private Long id;
     private Long merchantId;
     private String branchCode;

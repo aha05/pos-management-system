@@ -1,13 +1,11 @@
 package com.pos.merchant.settlement_account_reference;
 
-import com.pos.merchant.merchant.MerchantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class SettlementAccountMapperImpl implements SettlementAccountMapper {
-    private final MerchantService merchantService;
 
     @Override
     public SettlementAccountResponse toDto(SettlementAccountReference settlementAccountReference) {
@@ -28,7 +26,6 @@ public class SettlementAccountMapperImpl implements SettlementAccountMapper {
     @Override
     public SettlementAccountReference toEntity(SettlementAccountRequest request) {
         var settlementAccountReference = new SettlementAccountReference();
-        settlementAccountReference.setMerchant(merchantService.findMerchantById(request.getMerchantId()));
         settlementAccountReference.setAccountNumber(request.getAccountNumber());
         settlementAccountReference.setAccountHolderName(request.getAccountHolderName());
         settlementAccountReference.setBankName(request.getBankName());

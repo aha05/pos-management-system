@@ -6,31 +6,31 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class MerchantBranchMapperImpl implements MerchantBranchMapper {
+public class BranchMapperImpl implements BranchMapper {
     private final MerchantService merchantService;
 
     @Override
-    public MerchantBranchResponse toDto(MerchantBranch merchantBranch) {
-        return MerchantBranchResponse.builder()
-                .id(merchantBranch.getId())
-                .merchantId(merchantBranch.getMerchant().getId())
-                .branchCode(merchantBranch.getBranchCode())
-                .branchName(merchantBranch.getBranchName())
-                .phoneNumber(merchantBranch.getPhoneNumber())
-                .email(merchantBranch.getEmail())
-                .country(merchantBranch.getCountry())
-                .city(merchantBranch.getCity())
-                .city(merchantBranch.getCity())
-                .subCity(merchantBranch.getCity())
-                .woreda(merchantBranch.getWoreda())
-                .address(merchantBranch.getAddress())
-                .status(merchantBranch.getStatus())
+    public BranchResponse toDto(Branch branch) {
+        return BranchResponse.builder()
+                .id(branch.getId())
+                .merchantId(branch.getMerchant().getId())
+                .branchCode(branch.getBranchCode())
+                .branchName(branch.getBranchName())
+                .phoneNumber(branch.getPhoneNumber())
+                .email(branch.getEmail())
+                .country(branch.getCountry())
+                .city(branch.getCity())
+                .city(branch.getCity())
+                .subCity(branch.getCity())
+                .woreda(branch.getWoreda())
+                .address(branch.getAddress())
+                .status(branch.getStatus())
                 .build();
     }
 
     @Override
-    public MerchantBranch toEntity(MerchantBranchRequest request) {
-        MerchantBranch merchantBranch = new MerchantBranch();
+    public Branch toEntity(BranchRequest request) {
+        Branch merchantBranch = new Branch();
         merchantBranch.setMerchant(merchantService
                 .findMerchantById(request.getMerchantId()));
         merchantBranch.setBranchCode(request.getBranchCode());
