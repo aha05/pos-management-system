@@ -29,7 +29,6 @@ public class TerminalAssignmentMapperImpl implements TerminalAssignmentMapper {
     public TerminalAssignment toEntity(TerminalAssignmentRequest request) {
         TerminalAssignment terminalAssignment = new TerminalAssignment();
         terminalAssignment.setTerminal(terminalService.findTerminalById(request.getTerminalId()));
-        terminalAssignment.setBranchId(request.getBranchId());
         terminalAssignment.setAssignmentType(request.getAssignmentType());
         terminalAssignment.setAssignedAt(request.getAssignedAt());
         terminalAssignment.setAssignedBy(request.getAssignedBy());

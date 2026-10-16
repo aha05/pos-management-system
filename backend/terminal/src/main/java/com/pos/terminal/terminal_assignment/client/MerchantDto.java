@@ -1,4 +1,4 @@
-package com.pos.terminal.terminal_assignment;
+package com.pos.terminal.terminal_assignment.client;
 
 import lombok.Data;
 
