@@ -3,9 +3,13 @@ server:
 spring:
   application:
     name: merchant
+  profiles:
+    active: "qa"
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/merchant?createDatabaseIfNotExist=true
     username: ${SCHEMA_USERNAME}
     password: ${SCHEMA_PASSWORD}
   jpa:
     show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8071/"

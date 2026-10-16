@@ -104,7 +104,16 @@
 					<cleanDisabled>false</cleanDisabled> <!-- make the cleanDisabled: false otherwise flyway:clean won’t work this should be removed at production for safety purpose-->
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.5.2</version>
+				<configuration>
+					<to>
+						<image>pos-termianl-service:latest</image>
+					</to>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
