@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: "configserver"
+  config:
+    import: "optional:configserver:http://localhost:8071/"
   profiles:
     active: native
   cloud:
@@ -26,6 +28,7 @@ management:
     health:
       probes:
         enabled: true
+
 
 
 
