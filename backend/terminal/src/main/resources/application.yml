@@ -2,7 +2,7 @@ server:
   port: 8081
 spring:
   application:
-    name: terminal
+    name: terminals
   datasource:
     url: jdbc:mysql://${DB_HOST}:${DB_PORT}/terminal?createDatabaseIfNotExist=true
     username: ${SCHEMA_USERNAME}

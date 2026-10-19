@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: merchant
+    name: merchants
   profiles:
     active: "qa"
   datasource:

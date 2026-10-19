@@ -20,7 +20,7 @@ import java.util.List;
         description = "CRUD REST APIs in POS to CREATE, UPDATE, FETCH AND DELETE Merchant details"
 )
 @RestController
-@RequestMapping(path = "merchant", produces = {MediaType.APPLICATION_JSON_VALUE})
+@RequestMapping(path = "/merchant", produces = {MediaType.APPLICATION_JSON_VALUE})
 @RequiredArgsConstructor
 public class MerchantController {
     private final MerchantService merchantService;
