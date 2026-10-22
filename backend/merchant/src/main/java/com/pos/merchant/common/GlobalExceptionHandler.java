@@ -37,6 +37,18 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(TooManyRequestsException.class)
+    public ResponseEntity<ErrorResponse> handleTooManyRequestsException(TooManyRequestsException exception,
+                                                                         HttpServletRequest request) {
+        ErrorResponse errorResponseDTO = new ErrorResponse(
+                request.getRequestURI(),
+                HttpStatus.TOO_MANY_REQUESTS,
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.NOT_FOUND);
+    }
+
 //    @ExceptionHandler(Exception.class)
 //    public ResponseEntity<ErrorResponse> handleGlobalException(Exception exception,
 //                                                               HttpServletRequest request) {

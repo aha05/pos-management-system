@@ -1,6 +1,8 @@
 package com.pos.merchant.merchant;
 
 import com.pos.merchant.common.ErrorResponse;
+import com.pos.merchant.common.TooManyRequestsException;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,9 +13,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Tag(
         name = "CRUD REST APIs for Merchant in POS",
@@ -92,12 +97,23 @@ public class MerchantController {
             )
     }
     )
+    @RateLimiter(
+            name = "getMerchantInfo",
+            fallbackMethod = "getMerchantInfoFallback"
+    )
     @GetMapping("/info")
     @ResponseStatus(HttpStatus.OK)
     public List<MerchantInformation> getMerchantInfo() {
         return merchantService.getMerchantInfo();
     }
 
+
+    @ResponseStatus(HttpStatus.OK)
+    public List<Merchant> getMerchantInfoFallback(Throwable throwable) {
+        throw new TooManyRequestsException(
+                "Too many requests. Please try again later."
+        );
+    }
 
     @Operation(
             summary = "Fetch Merchant Information By Id REST API",

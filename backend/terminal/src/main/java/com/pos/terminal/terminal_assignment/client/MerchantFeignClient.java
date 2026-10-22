@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient("merchant")
+@FeignClient(name="merchant", fallback=MerchantFallbackController.class)
 public interface MerchantFeignClient {
     @GetMapping(value = "/merchant/{id}",consumes = "application/json")
     public ResponseEntity<MerchantDto> getMerchantById(@PathVariable(name = "id") Long merchantId);
