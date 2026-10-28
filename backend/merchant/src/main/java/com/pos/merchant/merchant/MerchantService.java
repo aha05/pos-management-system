@@ -92,10 +92,14 @@ public class MerchantService {
     }
 
     private void sendCommunication(Merchant merchant) {
-        var merchantCreatedEvent = new MerchantCreatedEvent(merchant.getMerchantCode(), merchant.getTradeName(),
-                merchant.getStatus());
+        var merchantCreatedEvent = new MerchantCreatedEvent(
+                merchant.getId(),
+                merchant.getMerchantCode(),
+                merchant.getTradeName(),
+                merchant.getStatus().toString()
+        );
         log.info("Sending Communication request for the details: {}", merchantCreatedEvent);
-        var result = streamBridge.send("sendCommunication-out-0", merchantCreatedEvent);
+        var result = streamBridge.send("merchantCreated-out-0", merchantCreatedEvent);
         log.info("Is the Communication request successfully triggered ? : {}", result);
     }
 

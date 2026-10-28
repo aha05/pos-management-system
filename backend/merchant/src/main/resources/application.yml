@@ -17,10 +17,10 @@ spring:
     stream:
       bindings:
         updateCommunication-in-0:
-          destination: communication-sent # this name is used for binding the queue
+          destination: communication-sent
           group: ${spring.application.name}
-        sendCommunication-out-0:
-          destination: send-communication # this name is used for binding the exchange
+        merchantCreated-out-0:
+          destination: merchant-created
       kafka:
         binder:
           brokers:

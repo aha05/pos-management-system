@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: notification
+  datasource:
+    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/notification?createDatabaseIfNotExist=true
+    username: ${SCHEMA_USERNAME}
+    password: ${SCHEMA_PASSWORD}
+  jpa:
+    show-sql: true
+  config:
+    import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    function:
+      definition: merchantCreatedConsumer
+    stream:
+      bindings:
+        merchantCreatedConsumer-in-0:
+          destination: merchant-created
+          group: ${spring.application.name}
+
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
