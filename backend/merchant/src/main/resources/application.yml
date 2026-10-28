@@ -13,6 +13,18 @@ spring:
     show-sql: true
   config:
     import: "optional:configserver:http://localhost:8071/"
+  cloud:
+    stream:
+      bindings:
+        updateCommunication-in-0:
+          destination: communication-sent # this name is used for binding the queue
+          group: ${spring.application.name}
+        sendCommunication-out-0:
+          destination: send-communication # this name is used for binding the exchange
+      kafka:
+        binder:
+          brokers:
+            - localhost:9092
 
 management:
   endpoints:

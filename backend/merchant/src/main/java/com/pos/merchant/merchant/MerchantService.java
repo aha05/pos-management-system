@@ -2,8 +2,12 @@ package com.pos.merchant.merchant;
 
 import com.pos.merchant.branch.BranchRepository;
 import com.pos.merchant.common.ResourceNotFoundException;
+import com.pos.merchant.event.MerchantCreatedEvent;
 import com.pos.merchant.settlement_account_reference.SettlementAccountService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +19,10 @@ public class MerchantService {
     private final BranchRepository branchRepository;
     private final MerchantMapper merchantMapper;
     private final SettlementAccountService settlementAccountService;
+
+    private static final Logger log = LoggerFactory.getLogger(MerchantService.class);
+    private final StreamBridge streamBridge;
+
 
     public Merchant findMerchantById(Long merchantId){
         return merchantRepository.findById(merchantId).orElseThrow(
@@ -39,6 +47,7 @@ public class MerchantService {
     public MerchantResponse addMerchant(MerchantRequest request) {
         var merchant = merchantRepository.save(merchantMapper
                 .toEntity(request));
+        sendCommunication(merchant);
         return merchantMapper.toDto(merchant);
 
     }
@@ -81,4 +90,13 @@ public class MerchantService {
 
         return merchantMapper.toMerchantInfo(merchant, settlementAccountNumber, branches);
     }
+
+    private void sendCommunication(Merchant merchant) {
+        var merchantCreatedEvent = new MerchantCreatedEvent(merchant.getMerchantCode(), merchant.getTradeName(),
+                merchant.getStatus());
+        log.info("Sending Communication request for the details: {}", merchantCreatedEvent);
+        var result = streamBridge.send("sendCommunication-out-0", merchantCreatedEvent);
+        log.info("Is the Communication request successfully triggered ? : {}", result);
+    }
+
 }
